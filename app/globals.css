@@ -1,0 +1,464 @@
+/* ==========================================================================
+   DESIGN TOKENS — PLACEHOLDERS
+
+   These are NEUTRAL placeholder values, not Wonde 3.0 brand values. The
+   canonical brand spec lives at https://skills.wonde.com/design/ds/SKILL.md
+   which this environment's network policy currently blocks (403 on CONNECT).
+
+   To brand the app: replace the values in this :root block (and the dark
+   overrides below) with the tokens from that spec, and drop the Gilroy
+   webfont files into /public/fonts + fill in the @font-face rules. Nothing
+   else in the codebase hardcodes a colour or a font.
+   ========================================================================== */
+
+:root {
+  /* Brand */
+  --color-accent: #2f5fe0;
+  --color-accent-hover: #2450c4;
+  --color-accent-contrast: #ffffff;
+
+  /* Surfaces */
+  --color-canvas: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+
+  /* Ink */
+  --color-ink: #14161a;
+  --color-ink-muted: #5c6370;
+  --color-ink-subtle: #8a919e;
+
+  /* Lines */
+  --color-border: #e2e5ea;
+  --color-border-strong: #cbd0d8;
+
+  /* Feedback */
+  --color-danger: #b42318;
+  --color-danger-surface: #fef3f2;
+  --color-danger-border: #f5c6c2;
+
+  /* Type — Gilroy first so the brand font takes over once it is installed. */
+  --font-sans: Gilroy, ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Scale */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --shadow-sm: 0 1px 2px rgba(16, 22, 34, 0.06);
+  --shadow-md: 0 4px 16px rgba(16, 22, 34, 0.08);
+  --shadow-lg: 0 12px 40px rgba(16, 22, 34, 0.12);
+
+  --header-height: 60px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent: #6d92f5;
+    --color-accent-hover: #85a4f7;
+    --color-accent-contrast: #0d1017;
+
+    --color-canvas: #0d1017;
+    --color-surface: #14181f;
+    --color-surface-raised: #1a1f28;
+
+    --color-ink: #eef1f6;
+    --color-ink-muted: #a3abb9;
+    --color-ink-subtle: #78808e;
+
+    --color-border: #262c36;
+    --color-border-strong: #363d49;
+
+    --color-danger: #ff9d95;
+    --color-danger-surface: #2a1614;
+    --color-danger-border: #5a2620;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Shell ---------------------------------------------------------------- */
+
+.appHeader {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.appHeader__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.appHeader__mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex: none;
+}
+
+.appHeader__divider {
+  width: 1px;
+  height: 22px;
+  background: var(--color-border);
+}
+
+.appHeader__title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.appHeader__spacer {
+  margin-left: auto;
+}
+
+.appHeader__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5) var(--space-8);
+}
+
+/* --- Buttons -------------------------------------------------------------- */
+
+.button {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: background-color 120ms ease, border-color 120ms ease,
+    color 120ms ease;
+}
+
+.button--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.button--ghost {
+  background: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-ink-muted);
+}
+
+.button--ghost:hover:not(:disabled) {
+  color: var(--color-ink);
+  border-color: var(--color-ink-subtle);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button--block {
+  width: 100%;
+}
+
+/* --- Login ---------------------------------------------------------------- */
+
+.login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+}
+
+.login__card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+}
+
+.login__mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: var(--space-5);
+}
+
+.login__title {
+  margin: 0 0 var(--space-2);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.login__subtitle {
+  margin: 0 0 var(--space-5);
+  font-size: 14px;
+  color: var(--color-ink-muted);
+}
+
+.field {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.field__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-muted);
+}
+
+.field__input {
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  padding: 10px 12px;
+  color: var(--color-ink);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color 120ms ease;
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.alert {
+  margin-bottom: var(--space-4);
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-surface);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.login__footer {
+  margin: var(--space-5) 0 0;
+  font-size: 12px;
+  color: var(--color-ink-subtle);
+  text-align: center;
+}
+
+/* --- Dashboard index ------------------------------------------------------ */
+
+.pageHeading {
+  margin: 0 0 var(--space-2);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.pageSubheading {
+  margin: 0 0 var(--space-6);
+  color: var(--color-ink-muted);
+  font-size: 15px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 120ms ease, box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.card__description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-ink-muted);
+}
+
+.card__meta {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  font-size: 12px;
+  color: var(--color-ink-subtle);
+}
+
+/* --- Empty state ---------------------------------------------------------- */
+
+.empty {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-7) var(--space-5);
+  text-align: center;
+}
+
+.empty__title {
+  margin: 0 0 var(--space-2);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.empty__body {
+  margin: 0 auto var(--space-4);
+  max-width: 46ch;
+  color: var(--color-ink-muted);
+  font-size: 14px;
+}
+
+.empty__code {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 3px 7px;
+}
+
+/* --- Viewer --------------------------------------------------------------- */
+
+.viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.viewer__frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  display: block;
+  background: var(--color-surface);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 14px;
+  color: var(--color-ink-muted);
+}
+
+.backLink:hover {
+  color: var(--color-ink);
+}
