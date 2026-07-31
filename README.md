@@ -51,6 +51,13 @@ npx vercel --prod
 Set `DASHBOARD_PASSWORD` and `SESSION_SECRET` in the project's environment
 variables before the first production deploy, or login will return a 500.
 
+`vercel.json` pins `"framework": "nextjs"`. The Vercel project was created
+while the repo was still empty, so framework auto-detection found nothing and
+the project's `framework` was left `null` — which makes Vercel run a static
+build and fail with *"No Output Directory named `public` found"*. Pinning it in
+the repo fixes that for every deploy and every future clone, rather than
+relying on a dashboard setting.
+
 Dashboards are committed to the repo and shipped with the deployment, so
 publishing a new one means pushing a commit. `next.config.ts` uses
 `outputFileTracingIncludes` to make sure the `dashboards/` folder is bundled
