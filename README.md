@@ -41,6 +41,10 @@ Card titles come from the file's `<title>` tag, or from an optional
 `dashboards/manifest.json` if you want to override titles, descriptions or
 ordering.
 
+While there is exactly **one** dashboard, signing in goes straight to it rather
+than to a listing page with a single card on it. Add a second dashboard and the
+listing (and the "All dashboards" link in the header) come back automatically.
+
 ## Deploying to Vercel
 
 ```bash
@@ -102,12 +106,21 @@ middleware.ts               the auth gate
 
 ## Known limitations
 
-- **Branding is not applied yet.** `app/globals.css` contains neutral
-  placeholder tokens, not Wonde 3.0 brand values. The canonical spec at
-  `skills.wonde.com` was unreachable from the build environment (the network
-  policy returned 403), so no colours were guessed. Replacing the `:root` block
-  in that one file, plus adding the Gilroy webfont to `public/fonts`, brands the
-  whole app — nothing else hardcodes a colour or typeface.
+- **Gilroy is referenced but not bundled.** The brand colours in
+  `app/globals.css` are the real Wonde 3.0 values, taken from the token layer
+  embedded in the commercial dashboard. The Gilroy webfont files are not in the
+  repo, so both the shell and the dashboards currently fall back to Inter. To
+  switch Gilroy on, drop the `.woff`/`.woff2` files into `public/fonts` and add
+  `@font-face` rules; for a dashboard's own fonts, put them in that dashboard's
+  folder (e.g. `dashboards/commercial/fonts/`) so its relative `url("fonts/…")`
+  references resolve.
+
+- **Large dashboards inflate the repo.** Each upload is stored as a whole new
+  blob in git history, so a 12 MB dashboard revised ten times leaves ~120 MB
+  behind permanently. GitHub warns above 50 MB per file and hard-fails at 100 MB.
+  If revisions get frequent, either move the dashboards to Git LFS or split the
+  inline data out of the HTML into a sibling `.json` file the page fetches —
+  that way only the changed data re-uploads.
 - **Rate limiting is per-instance.** It is held in memory, so on serverless it
   slows a brute force rather than stopping one. If the dashboards ever hold
   genuinely sensitive data, move it to Vercel KV / Upstash, or put the

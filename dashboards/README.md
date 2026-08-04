@@ -23,12 +23,24 @@ dashboards/attendance/
 
 Inside a folder, reference assets with **relative** paths
 (`<img src="logo.png">`, `<script src="chart.js">`) so they resolve against
-`/d/attendance/`.
+`/d/attendance/`. The viewer loads the dashboard at its real entry file
+(`/d/attendance/index.html`) precisely so those relative URLs land inside the
+dashboard's own folder.
+
+This is what the folder layout is for. `dashboards/commercial/` uses it because
+that dashboard's CSS asks for `fonts/Gilroy-Regular.woff`; dropping those font
+files into `dashboards/commercial/fonts/` makes them load, with no code change.
 
 ## Naming
 
 The folder or file name becomes the URL slug, so stick to letters, numbers,
 hyphens, underscores and dots. Anything else is skipped.
+
+Keep the slug **stable across versions**. Uploading a new draft means replacing
+the file in place (`dashboards/commercial/index.html`), not adding
+`commercial-draft-4/` next to it — the URL stays the same and the old version
+stays in git history. The card title updates on its own, because it is read
+from the file's `<title>` on each request.
 
 ## Titles and descriptions
 

@@ -158,6 +158,22 @@ export async function listDashboards(): Promise<Dashboard[]> {
   return dashboards.map(({ order: _order, ...dashboard }) => dashboard)
 }
 
+/**
+ * URL the viewer iframe points at. This is the dashboard's real entry file
+ * rather than the bare slug, so that relative URLs inside the document
+ * (`fonts/Gilroy.woff`, `chart.js`) resolve against the dashboard's own
+ * folder instead of the /d/ root.
+ */
+export function dashboardSrc(dashboard: Dashboard): string {
+  const encoded = dashboard.entry
+    .split(path.sep)
+    .join('/')
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/')
+  return `/d/${encoded}`
+}
+
 export async function getDashboard(slug: string): Promise<Dashboard | null> {
   if (!isValidSlug(slug)) return null
   const all = await listDashboards()
@@ -179,10 +195,21 @@ export async function resolveDashboardFile(
   const [slug, ...rest] = segments as [string, ...string[]]
   if (!isValidSlug(slug)) return null
 
-  const candidates: string[] =
-    rest.length === 0
-      ? [path.join(DASHBOARDS_DIR, `${slug}.html`), path.join(DASHBOARDS_DIR, slug, 'index.html')]
-      : [path.join(DASHBOARDS_DIR, slug, ...rest)]
+  // The exact path is tried first so a dashboard can be requested at its real
+  // entry file (/d/commercial/index.html). Serving it there rather than at
+  // /d/commercial matters: the browser resolves the document's relative URLs
+  // against its own path, so `fonts/Gilroy.woff` only lands inside the
+  // dashboard's own folder when the URL carries that folder.
+  const candidates: string[] = [path.join(DASHBOARDS_DIR, ...segments)]
+
+  // Shorthands, single segment only: /d/<slug> finds <slug>.html or
+  // <slug>/index.html.
+  if (rest.length === 0) {
+    candidates.push(
+      path.join(DASHBOARDS_DIR, `${slug}.html`),
+      path.join(DASHBOARDS_DIR, slug, 'index.html'),
+    )
+  }
 
   const root = await fs.realpath(DASHBOARDS_DIR).catch(() => null)
   if (!root) return null
