@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { listDashboards } from '@/lib/dashboards'
 import SiteHeader from './site-header'
 
@@ -12,6 +13,13 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 
 export default async function HomePage() {
   const dashboards = await listDashboards()
+
+  // With a single dashboard an index listing one card is pure friction, so
+  // signing in lands straight on it. The listing reappears by itself as soon
+  // as there is a second dashboard.
+  if (dashboards.length === 1) {
+    redirect(`/dashboard/${dashboards[0]!.slug}`)
+  }
 
   return (
     <>

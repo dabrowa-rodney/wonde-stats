@@ -1,6 +1,12 @@
 import Link from 'next/link'
 
-export default function SiteHeader({ title }: { title?: string }) {
+export default function SiteHeader({
+  title,
+  showIndexLink = true,
+}: {
+  title?: string
+  showIndexLink?: boolean
+}) {
   return (
     <header className="appHeader">
       <Link className="appHeader__brand" href="/">
@@ -20,7 +26,7 @@ export default function SiteHeader({ title }: { title?: string }) {
       <div className="appHeader__spacer" />
 
       <div className="appHeader__actions">
-        {title ? (
+        {title && showIndexLink ? (
           <Link className="button button--ghost" href="/">
             All dashboards
           </Link>
